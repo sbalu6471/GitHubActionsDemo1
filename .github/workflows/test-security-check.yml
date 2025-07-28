@@ -109,5 +109,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: sbalu6471/bankapp:latest
+        tags: sbalu6471/FinApp:latest
         file: ./Dockerfile  
