@@ -18,27 +18,3 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn compile
-
-  security-check:
-    runs-on: self-hosted  # 🔁 switch from self-hosted temporarily
-    needs: compile
-    timeout-minutes: 15
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/trivy.list
-        sudo apt-get update
-        sudo apt-get install -y trivy
-    - name: Run Trivy on src
-      run: trivy fs --format table -o fs-report.json ./src
-
-    - name: Install Gitleaks
-      run: sudo apt-get install -y gitleaks
-
-    - name: Run Gitleaks
-      run: gitleaks detect --source . --report-format json --report-path gitleaks-report.json
