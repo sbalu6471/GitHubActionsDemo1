@@ -1,3 +1,4 @@
+
 name: CICD Pipeline
 
 on:
@@ -34,7 +35,6 @@ jobs:
         echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/trivy.list
         sudo apt-get update
         sudo apt-get install -y trivy
-
     - name: Run Trivy on src
       run: trivy fs --format table -o fs-report.json ./src
 
@@ -69,12 +69,7 @@ jobs:
         cache: maven
     - name: Build Project
       run: mvn package
-      
-    - name: Upload JAR artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-jar
-        path: target/*.jar 
+   
     - uses: actions/checkout@v4
       with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
@@ -92,34 +87,5 @@ jobs:
         pollingTimeoutSec: 600
       env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-
-  buils_docker_image_and_push:
-    runs-on: self-hosted
-    needs: build_project_and_sonar_scan
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download JAR artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: app-jar
-        path: app  # this will download JAR to ./app folder
-        
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ vars.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build and Push Docker image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: sbalu6471/bankapp:latest
-        file: ./Dockerfile  
-                  
-    
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}      
+      
