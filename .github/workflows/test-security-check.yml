@@ -6,7 +6,7 @@ on:
 
 jobs:
   test-security-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     timeout-minutes: 10
 
     steps:
