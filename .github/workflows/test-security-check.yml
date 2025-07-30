@@ -7,7 +7,7 @@ on:
 jobs:
   
   compile:
-    runs-on: ubuntu-local
+    runs-on: self-hosted
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       run: mvn compile
 
   security-check:
-    runs-on: ubuntu-latest  # 🔁 switch from self-hosted temporarily
+    runs-on: self-hosted  # 🔁 switch from self-hosted temporarily
     needs: compile
     timeout-minutes: 15
     steps:
